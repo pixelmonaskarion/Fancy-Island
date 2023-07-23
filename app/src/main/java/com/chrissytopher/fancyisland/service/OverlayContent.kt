@@ -4,6 +4,8 @@ import android.app.Notification
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -25,18 +27,18 @@ import androidx.compose.ui.unit.TextUnitType
 @Composable
 fun OverlayContent(overlayState: OverlayState) {
   Log.d("FancyIsland", "rendering content")
-  Box(Modifier.onGloballyPositioned {
-//    state.screenWidthPx = it.size.width
-//    state.screenHeightPx = it.size.height
-  }) {
+  Box() {
     Box(modifier = Modifier.background(Color.White)) {
-      LazyColumn() {
-        items(overlayState.notifications) { sbn ->
-          val notification: Notification = sbn.notification
-          val extras = notification.extras
-          val title = extras.getString(Notification.EXTRA_TITLE)
-          if (title != null) {
-            Text(text = title, fontSize = TextUnit(20.0F, TextUnitType.Sp))
+      Column {
+        Text(text = "Notifications", fontSize = TextUnit(20.0F, TextUnitType.Sp))
+        LazyColumn() {
+          items(overlayState.notifications) { sbn ->
+            val notification: Notification = sbn.notification
+            val extras = notification.extras
+            val title = extras.getString(Notification.EXTRA_TITLE)
+            if (title != null) {
+              Text(text = title, fontSize = TextUnit(20.0F, TextUnitType.Sp))
+            }
           }
         }
       }

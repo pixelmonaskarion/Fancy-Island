@@ -1,11 +1,13 @@
 package com.chrissytopher.fancyisland.service
 
+import android.app.Service
 import android.content.Context
 import android.content.Context.INPUT_SERVICE
 import android.graphics.PixelFormat
 import android.hardware.input.InputManager
 import android.os.Build
 import android.os.Handler
+import android.service.notification.StatusBarNotification
 import android.util.Log
 import android.view.WindowManager
 import androidx.compose.runtime.CompositionLocalProvider
@@ -16,17 +18,9 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.Executor
 
 
-class OverlayController(val service: FloatingService) {
-  val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+class OverlayController(val service: Service) {
   var viewHolder: OverlayViewHolder? = null
-  companion object {
-    val state = OverlayState()
-  }
-
-  init {
-    Log.d("FancyIsland", "OverlayController init")
-    addView()
-  }
+  val state = OverlayState()
 
   private fun createFullscreenOverlay(): OverlayViewHolder {
     val fullscreenOverlay = OverlayViewHolder(
@@ -56,35 +50,29 @@ class OverlayController(val service: FloatingService) {
     return fullscreenOverlay
   }
 
-  private fun addView() {
+  fun addView() {
+    state.is_active = true
+    val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     viewHolder = createFullscreenOverlay()
     windowManager.addView(viewHolder!!.view, viewHolder!!.params)
   }
 
-  private fun removeView() {
+  fun removeView() {
+    state.is_active = false
+    val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     windowManager.removeView(viewHolder!!.view)
     viewHolder!!.view.disposeComposition()
   }
 
-  fun setupNotification(id: Int) {
-    Log.d("FancyIsland", "setting up notification $id")
-    viewHolder!!.view.findViewTreeLifecycleOwner()!!.lifecycleScope.launch {
+  fun addNotification(notification: StatusBarNotification) {
+    state.notifications.add(notification)
+    Log.d("FancyIsland", "setting up notification ${notification.id}")
+    Thread {
       Log.d("FancyIsland", "waiting...")
       Thread.sleep(3000)
       Log.d("FancyIsland", "done waiting")
-      for (i in 0 until state.notifications.size) {
-        if (state.notifications[i].id == id) {
-          Log.d("FancyIsland", "removed notification $id")
-          state.notifications.removeAt(i)
-          break
-        }
-      }
-      if (state.notifications.size < 1) {
-        removeView()
-        service.is_started = false
-        service.stopSelf()
-      }
-    }
+      state.notifications.remove(notification)
+    }.start()
     Log.d("FancyIsland", "async check")
   }
 }

@@ -1,5 +1,6 @@
 package com.chrissytopher.fancyisland.service
 
+import android.app.Service
 import android.os.Bundle
 import androidx.compose.runtime.Recomposer
 import androidx.compose.ui.platform.AndroidUiDispatcher
@@ -20,7 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 // https://gist.github.com/handstandsam/6ecff2f39da72c0b38c07aa80bbb5a2f
-fun overlayViewFactory(service: FloatingService): ComposeView {
+fun overlayViewFactory(service: Service): ComposeView {
   val view = ComposeView(service)
   view.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
   val lifecycleOwner = MyLifecycleOwner()

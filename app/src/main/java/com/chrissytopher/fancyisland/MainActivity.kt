@@ -2,11 +2,8 @@ package com.chrissytopher.fancyisland
 
 import android.Manifest
 import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -26,18 +23,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
-import com.chrissytopher.fancyisland.service.FloatingService
 import com.chrissytopher.fancyisland.ui.theme.FancyIslandTheme
 
 
 class MainActivity : ComponentActivity() {
-    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (NotificationListener.ACTION == intent.action) {
-                newNotification(context, intent)
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +43,6 @@ class MainActivity : ComponentActivity() {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
         }
         Log.d("FancyIsland", "registering receiver")
-        registerReceiver(receiver, IntentFilter(NotificationListener.ACTION));
         setContent {
             FancyIslandTheme {
                 val launcher = rememberLauncherForActivityResult(
@@ -69,7 +57,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Button(onClick = {
-                    startOverlayService(this.applicationContext)
+//                    startOverlayService(this.applicationContext)
                     moveTaskToBack(true)
                 }) {
                     Text(text = "Start Overlay")
@@ -116,15 +104,15 @@ fun GreetingPreview() {
     }
 }
 
-fun startOverlayService(context: Context) {
-    val intent = Intent(context.applicationContext, FloatingService::class.java)
-    intent.putExtra(OVERLAY_COMMAND_INTENT, START_OVERLAY)
-    context.startForegroundService(intent)
-}
-
-fun newNotification(context: Context, originalIntent: Intent) {
-    val intent = Intent(context.applicationContext, FloatingService::class.java)
-    intent.replaceExtras(originalIntent)
-    intent.putExtra(OVERLAY_COMMAND_INTENT, NEW_NOTIFICATION)
-    context.startForegroundService(intent)
-}
+//fun startOverlayService(context: Context) {
+//    val intent = Intent(context.applicationContext, FloatingService::class.java)
+//    intent.putExtra(OVERLAY_COMMAND_INTENT, START_OVERLAY)
+//    context.startForegroundService(intent)
+//}
+//
+//fun newNotification(context: Context, originalIntent: Intent) {
+//    val intent = Intent(context.applicationContext, FloatingService::class.java)
+//    intent.replaceExtras(originalIntent)
+//    intent.putExtra(OVERLAY_COMMAND_INTENT, NEW_NOTIFICATION)
+//    context.startForegroundService(intent)
+//}
