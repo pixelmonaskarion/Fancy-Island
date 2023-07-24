@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
+import androidx.core.view.WindowCompat
 import com.chrissytopher.fancyisland.ui.theme.FancyIslandTheme
 
 

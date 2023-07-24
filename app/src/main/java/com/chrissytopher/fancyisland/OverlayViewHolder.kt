@@ -9,6 +9,6 @@ class OverlayViewHolder(val params: WindowManager.LayoutParams, service: Service
   val view = overlayViewFactory(service)
 
   init {
-    params.gravity = Gravity.DISPLAY_CLIP_VERTICAL or Gravity.CENTER_HORIZONTAL
+    params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
   }
 }
